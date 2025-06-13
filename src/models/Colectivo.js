@@ -3,7 +3,7 @@ const { sequelize } = require("../models/database");
 
 const Colectivo = sequelize.define("Colectivo", {
  patente:{
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     primaryKey: true,
   },
     capacidad: {

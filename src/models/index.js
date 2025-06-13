@@ -21,12 +21,10 @@ const Empresa = require("./Empresa");
   Colectivo.belongsTo(Linea, {
     // Un colectivo pertenece a una línea
     foreignKey: "id_linea",
-    sourceKey: "id_linea",
   });
   Linea.hasMany(Colectivo, {
     // Una línea tiene muchos colectivos
     foreignKey: "id_linea",
-    sourceKey: "id_linea",
   });
   // Linea - Horario
   Linea.hasMany(Horario, { foreignKey: "id_horario" });

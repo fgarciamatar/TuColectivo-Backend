@@ -1,20 +1,19 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../models/database");
 
-const Linea = sequelize.define("Linea", {
+const Punto = sequelize.define("Punto", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
   },
-  nombre: {
+  inicio: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  fin: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Linea;
-
-
-
-
+module.exports = Punto;

@@ -45,7 +45,7 @@ const createUserService = async ({
 const loginService = async (email) => {
   try {
     const user = await Usuario.findOne({
-      where: { email }
+      where: { email },
     });
 
     if (!user) {
@@ -98,10 +98,62 @@ const recoverPasswordService = async (email) => {
 
   await transporter.sendMail(mailOptions);
 
-  return { message: "Correo enviado con instrucciones para recuperar la contraseña" };
+  return {
+    message: "Correo enviado con instrucciones para recuperar la contraseña",
+  };
 };
 
+const refreshTokenService = async (refreshToken) => {
+  // Buscar el usuario por el refreshToken guardado
+  const user = await Usuario.findOne({ where: { refreshToken } });
 
+  if (!user) {
+    const error = new Error("Refresh Token no válido");
+    error.status = 403;
+    throw error;
+  }
 
+  // Verificar el token y generar uno nuevo
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-module.exports = { getUsersService, createUserService, loginService, recoverPasswordService };
+    const newAccessToken = jwt.sign(
+      {
+        id: decoded.id,
+        nombre: decoded.nombre,
+        rol: decoded.rol,
+        email: decoded.email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "5h" }
+    );
+
+    return newAccessToken;
+  } catch (err) {
+    const error = new Error("Token expirado o inválido");
+    error.status = 403;
+    throw error;
+  }
+};
+
+const logoutService = async (refreshToken) => {
+  const user = await Usuario.findOne({ where: { refreshToken } });
+
+  if (!user) {
+    const error = new Error("Refresh Token no válido");
+    error.status = 403;
+    throw error;
+  }
+
+  user.refreshToken = null;
+  await user.save();
+};
+
+module.exports = {
+  getUsersService,
+  createUserService,
+  loginService,
+  recoverPasswordService,
+  refreshTokenService,
+  logoutService,
+};

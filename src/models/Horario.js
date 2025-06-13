@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../models/database");
 
 const Horario = sequelize.define("Horario", {
- id_horario:{
+ id:{
     type: DataTypes.INTEGER,
     primaryKey: true,
   },
