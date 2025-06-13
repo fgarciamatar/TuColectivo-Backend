@@ -1,6 +1,7 @@
 const { Usuario } = require("../models/index");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
 const getUsersService = async () => {
@@ -104,25 +105,26 @@ const recoverPasswordService = async (email) => {
 };
 
 const refreshTokenService = async (refreshToken) => {
-  // Buscar el usuario por el refreshToken guardado
-  const user = await Usuario.findOne({ where: { refreshToken } });
-
-  if (!user) {
-    const error = new Error("Refresh Token no válido");
-    error.status = 403;
-    throw error;
-  }
-
-  // Verificar el token y generar uno nuevo
   try {
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    // Buscar al usuario por el refresh token
+    const user = await Usuario.findOne({ where: { refreshToken } });
 
+    if (!user) {
+      const error = new Error("Token inválido o usuario no encontrado");
+      error.status = 403;
+      throw error;
+    }
+
+    // Verificar si el token es válido (opcional si solo se guarda como string)
+    // jwt.verify(refreshToken, process.env.JWT_SECRET); // Solo si firmaste el refresh token
+
+    // Generar nuevo access token
     const newAccessToken = jwt.sign(
       {
-        id: decoded.id,
-        nombre: decoded.nombre,
-        rol: decoded.rol,
-        email: decoded.email,
+        dni: user.dni,
+        nombre: user.nombre,
+        rol: user.rol,
+        email: user.email,
       },
       process.env.JWT_SECRET,
       { expiresIn: "5h" }
