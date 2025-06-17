@@ -68,60 +68,81 @@ const recoverPasswordService = async (email) => {
     throw new Error("No existe un usuario con ese email.");
   }
 
-  // Generamos un token temporal
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  const resetTokenExpiry = Date.now() + 1000 * 60 * 15; // 15 minutos
+  // Generamos un PIN numérico de 6 dígitos
+  const resetPin = Math.floor(100000 + Math.random() * 900000).toString();
+  const resetPinExpiry = Date.now() + 15 * 60 * 1000; // 15 minutos
 
-  user.resetToken = resetToken;
-  user.resetTokenExpiry = resetTokenExpiry;
+  user.resetToken = resetPin; // lo podés renombrar a resetPin si querés
+  user.resetTokenExpiry = resetPinExpiry;
   await user.save();
 
-  // Configurar transporte de correo
   const transporter = nodemailer.createTransport({
-    service: "Gmail", // o cualquier otro (Outlook, SMTP, etc.)
+    service: "Gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
   });
 
-  const resetLink = `https://tuapp.com/reset-password?token=${resetToken}`;
-
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Recuperación de contraseña",
-    html: `<p>Hola, solicitaste restablecer tu contraseña.</p>
-           <p>Haz clic en el siguiente enlace para crear una nueva contraseña:</p>
-           <a href="${resetLink}">${resetLink}</a>
-           <p>Este enlace expirará en 15 minutos.</p>`,
+    subject: "Código de recuperación de contraseña",
+    html: `
+      <p>Hola ${user.nombre},</p>
+      <p>Tu código de recuperación es:</p>
+      <h2 style="color: #2e86de">${resetPin}</h2>
+      <p>Este código expira en 15 minutos.</p>
+    `,
   };
 
   await transporter.sendMail(mailOptions);
 
-  return {
-    message: "Correo enviado con instrucciones para recuperar la contraseña",
-  };
+  return { message: "Código enviado al correo electrónico" };
 };
+
+const resetPasswordService = async (email, pin, nuevaContraseña) => {
+  const user = await Usuario.findOne({ where: { email } });
+
+  if (!user || user.resetToken !== pin) {
+    const error = new Error("PIN inválido");
+    error.status = 400;
+    throw error;
+  }
+
+  if (Date.now() > user.resetTokenExpiry) {
+    const error = new Error("El PIN ha expirado");
+    error.status = 400;
+    throw error;
+  }
+
+  const hashedPassword = await bcrypt.hash(nuevaContraseña, 10);
+  user.contraseña = hashedPassword;
+
+  user.resetToken = null;
+  user.resetTokenExpiry = null;
+
+  await user.save();
+
+  return { message: "Contraseña actualizada correctamente" };
+};
+
 
 const refreshTokenService = async (refreshToken) => {
   try {
-    // Buscar al usuario por el refresh token
-    const user = await Usuario.findOne({ where: { refreshToken } });
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    console.log("Decoded refresh token:", decoded);
+    
+
+    const user = await Usuario.findOne({ where: { id: decoded.id, refreshToken } });
 
     if (!user) {
-      const error = new Error("Token inválido o usuario no encontrado");
-      error.status = 403;
-      throw error;
+      throw new Error("Usuario no encontrado o token no coincide");
     }
 
-    // Verificar si el token es válido (opcional si solo se guarda como string)
-    // jwt.verify(refreshToken, process.env.JWT_SECRET); // Solo si firmaste el refresh token
-
-    // Generar nuevo access token
     const newAccessToken = jwt.sign(
       {
-        dni: user.dni,
+        id: user.id,
         nombre: user.nombre,
         rol: user.rol,
         email: user.email,
@@ -137,6 +158,7 @@ const refreshTokenService = async (refreshToken) => {
     throw error;
   }
 };
+
 
 const logoutService = async (refreshToken) => {
   const user = await Usuario.findOne({ where: { refreshToken } });
@@ -156,6 +178,7 @@ module.exports = {
   createUserService,
   loginService,
   recoverPasswordService,
+  resetPasswordService,
   refreshTokenService,
   logoutService,
 };

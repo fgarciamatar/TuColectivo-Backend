@@ -3,12 +3,14 @@ const {
   createUserService,
   loginService,
   recoverPasswordService,
+  resetPasswordService,
   logoutService,
   refreshTokenService
 } = require("../services/UserService");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+
 
 const getUsersController = async (req, res) => {
   try {
@@ -88,7 +90,7 @@ const loginController = async (req, res) => {
         email: user.email,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "5h" }
+      { expiresIn: "3h" }
     );
 
     const refreshToken = jwt.sign(
@@ -134,6 +136,22 @@ const recoverPasswordController = async (req, res) => {
   }
 };
 
+const resetPasswordController = async (req, res) => {
+  const { email, pin, nuevaContraseña } = req.body;
+
+  if (!email || !pin || !nuevaContraseña) {
+    return res.status(400).json({ error: "Todos los datos son requeridos" });
+  }
+
+  try {
+    const result = await resetPasswordService(email, pin, nuevaContraseña);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+
 
 const logoutController = async (req, res) => {
   const { refreshToken } = req.body;
@@ -172,6 +190,7 @@ module.exports = {
   createUserController,
   loginController,
   recoverPasswordController,
+  resetPasswordController,
   logoutController,
   refreshTokenController
 };
