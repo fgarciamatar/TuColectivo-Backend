@@ -18,13 +18,14 @@ async function connectDB() {
     await sequelize.authenticate();
     console.log("✅ TODO BIEN EN LA BDD!!");
 
-    await sequelize.sync({ force: false }); //true 👈 esto reinicia la base
-    // console.log("🧨 Base de datos reiniciada (force: true)");
+    await sequelize.sync({ force: false });
 
   } catch (error) {
     console.error("❌ TODO MAL EN LA BDD :(", error);
+    throw error; // 👈 ¡Esto es clave!
   }
 }
+
 
 
 module.exports = { sequelize, connectDB };

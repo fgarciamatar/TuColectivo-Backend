@@ -10,7 +10,7 @@ const Colectivo = sequelize.define("Colectivo", {
     type: DataTypes.INTEGER
   },
   modelo: {
-    type: DataTypes.STRING
+    type: DataTypes.INTEGER
   },
 });
 

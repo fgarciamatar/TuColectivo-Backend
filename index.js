@@ -8,20 +8,25 @@ const routes = require("./src/routes/index");
 
 const app = express();
 app.use(cors({
-  origin: '*', // o especificá tu IP: 'http://192.168.0.123:3000'
-  methods: ['GET', 'POST'],
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
+
 
 app.use(express.json());
 app.use("/", routes);
 
 const PORT = process.env.PORT || 3002;
-const IP = "192.168.1.9"
 
-
-
-app.listen(3002,IP, async () => {
-   await connectDB(); // 📡 Acá conectás
-  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+app.listen(PORT, async () => {
+  try {
+    await connectDB();
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  } catch (err) {
+    console.error("💥 Error al iniciar el servidor:", err.message);
+    process.exit(1);
+  }
 });
+
+
 
