@@ -5,6 +5,7 @@ const Parada = sequelize.define("Parada", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true
   },
   nombre: {
     type: DataTypes.STRING,

@@ -18,7 +18,7 @@ async function connectDB() {
     await sequelize.authenticate();
     console.log("✅ TODO BIEN EN LA BDD!!");
 
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true }); // true reinica la base de datos
 
   } catch (error) {
     console.error("❌ TODO MAL EN LA BDD :(", error);
