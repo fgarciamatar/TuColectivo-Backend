@@ -22,7 +22,7 @@ async function connectDB() {
 
   } catch (error) {
     console.error("❌ TODO MAL EN LA BDD :(", error);
-    throw error; // 👈 ¡Esto es clave!
+    throw error; 
   }
 }
 

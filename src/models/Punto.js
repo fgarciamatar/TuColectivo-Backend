@@ -5,6 +5,11 @@ const Punto = sequelize.define("Punto", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
+  },
+  posicion:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   inicio: {
     type: DataTypes.STRING,

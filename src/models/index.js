@@ -7,6 +7,7 @@ const Horario = require("./Horario");
 const Colectivo = require("./Colectivo");
 const Chofer = require("./Chofer");
 const Empresa = require("./Empresa");
+const Punto = require("./Punto");
 
 
   // Empresa - Chofer
@@ -61,6 +62,7 @@ module.exports = {
   Colectivo,
   Chofer,
   Empresa,
+  Punto,
   sequelize
 };
 

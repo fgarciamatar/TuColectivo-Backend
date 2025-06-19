@@ -6,6 +6,8 @@ const LineaRouter = require("./LineaRouter");
 const ChoferRouter = require("./ChoferRouter");
 const ParadaRouter = require("./ParadaRouter");
 const HorarioRouter = require("./HorarioRouter");
+const PuntoRouter = require("./PuntoRouter");
+const RecorridoRouter = require("./RecorridoRouter");
 
 
 
@@ -18,5 +20,7 @@ router.use("/", ColectivoRouter)
 router.use("/", LineaRouter)
 router.use("/", ParadaRouter); 
 router.use("/", HorarioRouter);
+router.use("/", PuntoRouter);
+router.use("/", RecorridoRouter);
 
 module.exports = router;
