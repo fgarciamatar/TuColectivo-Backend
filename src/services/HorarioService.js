@@ -1,7 +1,7 @@
 const { Horario } = require("../models");
 
-const crearHorario = async ({ dia, hora, turno }) => {
-  if (!dia || !hora || !turno) {
+const crearHorario = async ({ dia, hora, turno, id_linea, id_parada }) => {
+  if (!dia || !hora || !turno || !id_linea || !id_parada) {
     throw new Error("Todos los campos son obligatorios");
   }
   const existeHorario = await Horario.findOne({ where: { dia, hora, turno } });
@@ -9,7 +9,7 @@ const crearHorario = async ({ dia, hora, turno }) => {
     throw new Error("Ya existe un horario con estos datos");
   }
 
-  const horario = await Horario.create({ dia, hora, turno });
+  const horario = await Horario.create({ dia, hora, turno, id_linea, id_parada });
   return horario;
 };
 

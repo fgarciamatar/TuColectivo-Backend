@@ -1,12 +1,12 @@
 const colectivoService = require("../services/ColectivoService");
 
 const create = async (req, res) => {
-  const { patente, capacidad, modelo } = req.body;
-  if (!patente || !capacidad || !modelo) {
+  const { patente, capacidad, modelo, id_empresa, id_linea } = req.body;
+  if (!patente || !capacidad || !modelo || !id_empresa || !id_linea) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
   try {
-    const colectivo = await colectivoService.crearColectivo({ patente, capacidad, modelo });
+    const colectivo = await colectivoService.crearColectivo({ patente, capacidad, modelo, id_empresa, id_linea });
     res.status(201).json(colectivo);
   } catch (error) {
     res.status(400).json({ error: error.message });

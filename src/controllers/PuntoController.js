@@ -2,12 +2,12 @@ const puntoService = require("../services/PuntoService");
 
 const create = async (req, res) => {
   console.log("📥 [POST] /createPunto", req.body);
-  const { inicio, fin, posicion } = req.body;
-  if (!inicio || !fin || !posicion) {
+  const { inicio, fin, posicion, id_linea } = req.body;
+  if (!inicio || !fin || !posicion || !id_linea) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
   try {
-    const punto = await puntoService.crearPunto({ inicio, fin, posicion });
+    const punto = await puntoService.crearPunto({ inicio, fin, posicion, id_linea });
     res.status(201).json(punto);
   } catch (error) {
     res.status(400).json({ error: error.message });

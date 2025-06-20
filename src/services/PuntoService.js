@@ -1,7 +1,7 @@
 const { Punto } = require("../models");
 
-const crearPunto = async ({ inicio, fin, posicion }) => {
-  if (!inicio || !fin || !posicion) {
+const crearPunto = async ({ inicio, fin, posicion, id_linea }) => {
+  if (!inicio || !fin || !posicion || !id_linea) {
     throw new Error("Todos los campos son obligatorios");
   }
 
@@ -12,7 +12,7 @@ const crearPunto = async ({ inicio, fin, posicion }) => {
   if (puntoExistente) {
     throw new Error("El punto ya existe");
   }
-  const punto = await Punto.create({ inicio, fin, posicion });
+  const punto = await Punto.create({ inicio, fin, posicion, id_linea });
   return punto;
 };
 

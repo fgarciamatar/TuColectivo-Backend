@@ -12,6 +12,24 @@ const Colectivo = sequelize.define("Colectivo", {
   modelo: {
     type: DataTypes.INTEGER
   },
+   id_empresa: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+  references: {
+    model: "Empresa",
+    key: "id"
+  }
+},
+ id_linea: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+  references: {
+    model: "Linea",
+    key: "id"
+  }
+}
+}, {
+  tableName: "Colectivo" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Colectivo;

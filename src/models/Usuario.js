@@ -39,6 +39,8 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+}, {
+  tableName: "Usuario" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Usuario;

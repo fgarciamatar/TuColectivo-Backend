@@ -2,12 +2,12 @@ const horarioService = require("../services/HorarioService");
 
 const create = async (req, res) => {
   console.log("📥 [POST] /createHorario", req.body);
-  const { dia, hora, turno } = req.body;
-  if (!dia || !hora || !turno) {
+  const { dia, hora, turno, id_linea, id_parada } = req.body;
+  if (!dia || !hora || !turno || !id_linea || !id_parada) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
   try {
-    const horario = await horarioService.crearHorario({ dia, hora, turno });
+    const horario = await horarioService.crearHorario({ dia, hora, turno , id_linea, id_parada });
     res.status(201).json(horario);
   } catch (error) {
     res.status(400).json({ error: error.message });

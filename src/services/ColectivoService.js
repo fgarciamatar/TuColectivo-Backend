@@ -1,7 +1,7 @@
 const { Colectivo } = require("../models");
 
-const crearColectivo = async ({ patente, capacidad, modelo }) => {
-  if (!patente || !capacidad || !modelo) {
+const crearColectivo = async ({ patente, capacidad, modelo, id_empresa, id_linea }) => {
+  if (!patente || !capacidad || !modelo || !id_empresa || !id_linea) {
     throw new Error("Todos los campos son obligatorios");
   }
 
@@ -10,7 +10,7 @@ const crearColectivo = async ({ patente, capacidad, modelo }) => {
     throw new Error("Ya existe un colectivo con esa patente");
   }
 
-  return await Colectivo.create({ patente, capacidad, modelo });
+  return await Colectivo.create({ patente, capacidad, modelo, id_empresa, id_linea });
 };
 
 const obtenerTodos = async () => {

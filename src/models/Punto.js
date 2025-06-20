@@ -7,7 +7,7 @@ const Punto = sequelize.define("Punto", {
     primaryKey: true,
     autoIncrement: true,
   },
-  posicion:{
+  posicion: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -19,6 +19,16 @@ const Punto = sequelize.define("Punto", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  id_linea: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Linea",
+      key: "id",
+    },
+  },
+}, {
+  tableName: "Punto" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Punto;

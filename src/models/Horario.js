@@ -19,6 +19,24 @@ const Horario = sequelize.define("Horario", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+   id_linea: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  references: {
+    model: "Linea",
+    key: "id"
+  }
+},
+ id_parada: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  references: {
+    model: "Parada",
+    key: "id"
+  }
+}
+}, {
+  tableName: "Horario" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Horario;

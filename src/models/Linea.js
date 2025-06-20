@@ -11,6 +11,8 @@ const Linea = sequelize.define("Linea", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  tableName: "Linea" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Linea;

@@ -1,14 +1,14 @@
 const { Chofer } = require("../models");
 
-const crearChofer = async ({ dni, nombre, apellido, edad }) => {
-  if (!dni || !nombre || !apellido || !edad) {
+const crearChofer = async ({ dni, nombre, apellido, edad, id_empresa}) => {
+  if (!dni || !nombre || !apellido || !edad || !id_empresa) {
     throw new Error("Todos los campos son obligatorios");
   }
 
   const existente = await Chofer.findByPk(dni);
   if (existente) throw new Error("Ya existe un chofer con ese DNI");
 
-  return await Chofer.create({ dni, nombre, apellido, edad });
+  return await Chofer.create({ dni, nombre, apellido, edad, id_empresa });
 };
 
 const obtenerTodos = async () => {

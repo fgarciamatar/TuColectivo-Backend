@@ -23,7 +23,13 @@ const Parada = sequelize.define("Parada", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  popular:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  }
   
+}, {
+  tableName: "Parada" // 👈 evita que Sequelize pluralice
 });
 
 module.exports = Parada;
