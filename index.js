@@ -2,44 +2,31 @@ const express = require("express");
 require("dotenv").config();
 const { connectDB } = require("./src/models/database");
 const cors = require("cors");
+// const { connectDB } = require("./src/models/database");
+
 const routes = require("./src/routes/index");
 
 const app = express();
-
-// Middleware CORS
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
 
-app.use(express.json());
 
-// Rutas principales
+app.use(express.json());
 app.use("/", routes);
 
-// Puerto dinámico
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT;
 
-// 🌐 Ambiente actual
-const ENV = process.env.NODE_ENV || "development";
-
-// 🔌 Conexión y servidor
-async function startServer() {
+app.listen(PORT, async () => {
   try {
     await connectDB();
-
-    app.listen(PORT, () => {
-      if (ENV === "development") {
-        console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-      } else {
-        console.log(`🚀 Servidor corriendo en producción en el puerto ${PORT}`);
-      }
-    });
-
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   } catch (err) {
     console.error("💥 Error al iniciar el servidor:", err.message);
     process.exit(1);
   }
-}
+});
 
-startServer();
+
+

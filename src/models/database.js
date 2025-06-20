@@ -24,7 +24,7 @@ async function connectDB() {
     await sequelize.authenticate();
     console.log("✅ TODO BIEN EN LA BDD!!");
 
-    await sequelize.sync({ alter: true }); // usa alter si no querés borrar la BDD
+    await sequelize.sync({ alter: false }); // usa alter si no querés borrar la BDD
 
   } catch (error) {
     console.error("❌ TODO MAL EN LA BDD :(", error);
