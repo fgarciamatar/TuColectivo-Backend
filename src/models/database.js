@@ -10,6 +10,12 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     dialect: "postgres",
     logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false, // Railway no tiene certificado verificado
+      },
+    },
   }
 );
 
@@ -18,14 +24,14 @@ async function connectDB() {
     await sequelize.authenticate();
     console.log("✅ TODO BIEN EN LA BDD!!");
 
-    await sequelize.sync({ force: true }); // true reinica la base de datos
+    await sequelize.sync({ alter: true }); // usa alter si no querés borrar la BDD
 
   } catch (error) {
     console.error("❌ TODO MAL EN LA BDD :(", error);
-    throw error; 
+    throw error;
   }
 }
 
-
-
 module.exports = { sequelize, connectDB };
+
+
