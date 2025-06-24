@@ -54,7 +54,7 @@ const loginService = async (email) => {
     }
 
     // Buscar en la tabla Chofer si no se encontró en Usuario
-    const chofer = await Chofer.findOne({ where: { email } });
+    const chofer = await Chofer.findOne({ where: { nombre: email } });
 
     if (chofer) {
       // Retornamos al chofer con rol fijo 'chofer'
