@@ -1,4 +1,4 @@
-const { Usuario } = require("../models/index");
+const { Usuario, Chofer } = require("../models/index");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
@@ -45,17 +45,28 @@ const createUserService = async ({
 };
 const loginService = async (email) => {
   try {
-    const user = await Usuario.findOne({
-      where: { email },
-    });
+    // Buscar en la tabla Usuario
+    const user = await Usuario.findOne({ where: { email } });
 
-    if (!user) {
-      console.log(`No se encontró un usuario con el email: ${email}`);
-      return null;
+    if (user) {
+      // Retornamos el usuario con su modelo y rol real desde la tabla
+      return { ...user.dataValues, modelo: Usuario };
     }
 
-    console.log("Usuario encontrado:", user.email);
-    return user;
+    // Buscar en la tabla Chofer si no se encontró en Usuario
+    const chofer = await Chofer.findOne({ where: { email } });
+
+    if (chofer) {
+      // Retornamos al chofer con rol fijo 'chofer'
+      return {
+        ...chofer.dataValues,
+        rol: "chofer", // rol ficticio para uso en JWT y frontend
+        modelo: Chofer,
+      };
+    }
+
+    // Si no se encontró ni en Usuario ni en Chofer
+    return null;
   } catch (error) {
     console.error("Error en loginService:", error);
     throw new Error("Error al buscar el usuario");
@@ -127,14 +138,14 @@ const resetPasswordService = async (email, pin, nuevaContraseña) => {
   return { message: "Contraseña actualizada correctamente" };
 };
 
-
 const refreshTokenService = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     console.log("Decoded refresh token:", decoded);
-    
 
-    const user = await Usuario.findOne({ where: { id: decoded.id, refreshToken } });
+    const user = await Usuario.findOne({
+      where: { id: decoded.id, refreshToken },
+    });
 
     if (!user) {
       throw new Error("Usuario no encontrado o token no coincide");
@@ -158,7 +169,6 @@ const refreshTokenService = async (refreshToken) => {
     throw error;
   }
 };
-
 
 const logoutService = async (refreshToken) => {
   const user = await Usuario.findOne({ where: { refreshToken } });
