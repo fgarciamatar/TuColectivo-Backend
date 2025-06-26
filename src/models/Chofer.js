@@ -20,14 +20,14 @@ const Chofer = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      unique: true, // 🔒 Hace que el email sea único
-      allowNull: false,
-      validate: {
-        isEmail: true, // ✅ Valida que sea un email válido
-      },
-    },
+    // email: {
+    //   type: DataTypes.STRING,
+    //   unique: true, // 🔒 Hace que el email sea único
+    //   allowNull: false,
+    //   validate: {
+    //     isEmail: true, // ✅ Valida que sea un email válido
+    //   },
+    // },
     id_empresa: {
       type: DataTypes.INTEGER,
       allowNull: false,
