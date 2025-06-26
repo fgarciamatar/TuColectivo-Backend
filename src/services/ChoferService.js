@@ -25,8 +25,7 @@ const crearChofer = async ({
   });
 };
 
-const { Chofer } = require("../models/Chofer");
-const { Colectivo } = require("../models/Colectivo");
+
 
 const obtenerTodos = async () => {
   const choferes = await Chofer.findAll({
