@@ -1,19 +1,53 @@
-const { Chofer } = require("../models");
+const { Chofer, Colectivo, Linea, Empresa } = require("../models");
 
-const crearChofer = async ({ dni, nombre, apellido, edad, id_empresa}) => {
-  if (!dni || !nombre || !apellido || !edad || !id_empresa) {
+const crearChofer = async ({
+  dni,
+  nombre,
+  apellido,
+  edad,
+  id_empresa,
+  id_colectivo,
+}) => {
+  if (!dni || !nombre || !apellido || !edad || !id_empresa || !id_colectivo) {
     throw new Error("Todos los campos son obligatorios");
   }
 
   const existente = await Chofer.findByPk(dni);
   if (existente) throw new Error("Ya existe un chofer con ese DNI");
 
-  return await Chofer.create({ dni, nombre, apellido, edad, id_empresa });
+  return await Chofer.create({
+    dni,
+    nombre,
+    apellido,
+    edad,
+    id_empresa,
+    id_colectivo,
+  });
 };
 
+const { Chofer } = require("../models/Chofer");
+const { Colectivo } = require("../models/Colectivo");
+
 const obtenerTodos = async () => {
-  const choferes = await Chofer.findAll();
+  const choferes = await Chofer.findAll({
+    include: {
+      model: Colectivo,
+      attributes: ["patente", "capacidad", "modelo"],
+      include: [
+        {
+          model: Empresa,
+          attributes: ["id", "nombre"], // o los campos que quieras
+        },
+        {
+          model: Linea,
+          attributes: ["id", "numero", "nombre"], // o los campos que quieras
+        },
+      ],
+    },
+  });
+
   if (!choferes.length) throw new Error("No hay choferes registrados");
+
   return choferes;
 };
 

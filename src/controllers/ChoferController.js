@@ -2,9 +2,9 @@ const choferService = require("../services/ChoferService");
 
 const create = async (req, res) => {
   console.log("📥 [POST] /createChofer", req.body);
-  const { dni, nombre, apellido, edad, id_empresa } = req.body;
+  const { dni, nombre, apellido, edad, id_empresa, id_colectivo } = req.body;
   try {
-    const chofer = await choferService.crearChofer({ dni, nombre, apellido, edad, id_empresa });
+    const chofer = await choferService.crearChofer({ dni, nombre, apellido, edad, id_empresa, id_colectivo });
     res.status(201).json(chofer);
   } catch (error) {
     res.status(400).json({ error: error.message });
