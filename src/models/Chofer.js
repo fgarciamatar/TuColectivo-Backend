@@ -36,6 +36,14 @@ const Chofer = sequelize.define(
         key: "id",
       },
     },
+    id_colectivo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      references: {
+        model: "Colectivo",
+        key: "patente",
+      },
+    },
   },
   {
     tableName: "Chofer", // 👈 evita que Sequelize pluralice

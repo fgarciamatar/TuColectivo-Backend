@@ -13,6 +13,10 @@ const ParadaFavorita = require("./ParadaFavorita");
 Empresa.hasMany(Chofer, { foreignKey: "id_empresa" });
 Chofer.belongsTo(Empresa, { foreignKey: "id_empresa" });
 
+// Chofer - Colectivo
+Colectivo.hasMany(Chofer, { foreignKey: "id_colectivo" });
+Chofer.belongsTo(Colectivo, { foreignKey: "id_colectivo" });
+
 // Colectivo - Empresa
 Empresa.hasMany(Colectivo, { foreignKey: "id_empresa" });
 Colectivo.belongsTo(Empresa, { foreignKey: "id_empresa" });
